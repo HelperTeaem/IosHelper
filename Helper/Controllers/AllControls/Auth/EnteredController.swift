@@ -7,8 +7,14 @@
 
 import UIKit
 import FirebaseAuth
+import FirebaseCore
+import FirebaseFirestore
+import Firebase
+import FirebaseDatabase
 
 class EnteredController: BaseController {
+    
+    //MARK: Конфигурация
     
     private lazy var errorLabel: UILabel = {
         let errorLabel = UILabel()
@@ -82,10 +88,11 @@ class EnteredController: BaseController {
     }()
     
     private func configureNavigationBar() {
-        let navigationBar = self.navigationController?.navigationBar
         navigationItem.leftBarButtonItem = UIBarButtonItem()
         navigationItem.title = ""
     }
+    
+    //MARK: Загрузка экрана
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -94,13 +101,23 @@ class EnteredController: BaseController {
         configureNavigationBar()
     }
     
+    //MARK: Функции
+    
     func layoutConstraint() {
         view.addSubview(email)
         view.addSubview(password)
         view.addSubview(entered)
         view.addSubview(or)
         view.addSubview(register)
+        view.addSubview(errorLabel)
         NSLayoutConstraint.activate([
+            
+            errorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            errorLabel.topAnchor.constraint(equalTo: view.topAnchor),
+            view.trailingAnchor.constraint(equalTo: errorLabel.trailingAnchor),
+            errorLabel.bottomAnchor.constraint(equalTo: errorLabel.topAnchor, constant: 50),
+            
+            
             email.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
             email.topAnchor.constraint(equalTo: view.topAnchor, constant: 120),
             view.trailingAnchor.constraint(equalTo: email.trailingAnchor, constant: 50),
@@ -127,16 +144,16 @@ class EnteredController: BaseController {
         ])
     }
     
-    // Admin@gmail.com Admin1
+    //MARK: Наблюдатели
     
     @objc
     func onTapEnter() {
         Auth.auth().signIn(withEmail: email.text ?? " ", password: password.text ?? " ") { [weak self] authResult, error in
             if error == nil {
-                test[0].entered = true
-                _ = self?.navigationController?.popViewController(animated: true)
+                let vc = PersonalController()
+                self?.navigationController?.pushViewController(vc, animated: true)
             } else {
-                
+                self?.errorLabel.text = "Что-то пошло не так"
             }
         }
         

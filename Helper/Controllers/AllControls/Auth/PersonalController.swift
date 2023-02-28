@@ -6,14 +6,16 @@
 //
 
 import UIKit
+import Firebase
 
 final class PersonalController: BaseController {
+    
+    //MARK: Конфигурируем элементы
     
     private lazy var labelLogin: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        //MARK: удалить эту парашу
-        label.text = test[0].login
+        label.text = "Загружаем данные"
         label.textColor = Resources.Colors.textColor
         label.font = Resources.Fonts.mainFont(with: 24)
         return label
@@ -22,8 +24,6 @@ final class PersonalController: BaseController {
     private lazy var labelEmail: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        //MARK: удалить эту парашу
-        label.text = test[0].email
         label.textColor = Resources.Colors.textColor
         label.font = Resources.Fonts.mainFont(with: 20)
         return label
@@ -43,7 +43,6 @@ final class PersonalController: BaseController {
         button.contentHorizontalAlignment = .left
         button.contentEdgeInsets.left = 18
         button.titleLabel?.font = Resources.Fonts.mainFont(with: 20)
-        
         return button
     }()
     
@@ -83,28 +82,35 @@ final class PersonalController: BaseController {
         return button
     }()
     
-    
+    //MARK: Загрузка вьюхи
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationBar()
     }
     
-    private func configureNavigationBar() {
-        let navigationBar = self.navigationController?.navigationBar
-        navigationItem.leftBarButtonItem = UIBarButtonItem()
-        navigationItem.title = ""
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-                if test[0].entered == true {
-                    view.backgroundColor = Resources.Colors.mainBackgroundColor
-                    navigationController?.tabBarItem.title = Resources.Strings.TabBar.personal
-                    layoutConstraint()
-                } else {
-                        let vc = EnteredController()
-                        self.navigationController?.pushViewController(vc, animated: true)
-                }
+        
+        Auth.auth().addStateDidChangeListener { (auth, user) in
+            if user == nil {
+                let vc = EnteredController()
+                self.navigationController?.pushViewController(vc, animated: true)
+            } else {
+                self.view.backgroundColor = Resources.Colors.mainBackgroundColor
+                self.navigationController?.tabBarItem.title = Resources.Strings.TabBar.personal
+                self.layoutConstraint()
+                self.getLogin()
+                self.getEmail()
+            }
+        }
+    }
+    
+    //MARK: Реализации функций
+    
+    private func configureNavigationBar() {
+        navigationItem.leftBarButtonItem = UIBarButtonItem()
+        navigationItem.title = ""
+        navigationItem.rightBarButtonItem = UIBarButtonItem( barButtonSystemItem: .done, target: self, action: #selector(onTabExit))
     }
     
     func layoutConstraint() {
@@ -135,7 +141,41 @@ final class PersonalController: BaseController {
             buttonSettings.topAnchor.constraint(equalTo: buttonCollection.bottomAnchor, constant: 10),
             view.trailingAnchor.constraint(equalTo: buttonSettings.trailingAnchor, constant: 5),
             buttonSettings.bottomAnchor.constraint(equalTo: buttonSettings.topAnchor, constant: 70)
-            
         ])
+    }
+    
+    private func getLogin() {
+        let userID = Auth.auth().currentUser?.uid
+        Database.database().reference().child("users").child(userID!).observeSingleEvent(of: .value, with: { snapshot in
+            
+          let value = snapshot.value as? NSDictionary
+            self.labelLogin.text = value?["login"] as? String ?? ""
+            
+        }) { error in
+          print(error.localizedDescription)
+        }
+    }
+    
+    private func getEmail() {
+        let userID = Auth.auth().currentUser?.uid
+        Database.database().reference().child("users").child(userID!).observeSingleEvent(of: .value, with: { snapshot in
+            
+          let value = snapshot.value as? NSDictionary
+            self.labelEmail.text = value?["login"] as? String ?? ""
+            
+        }) { error in
+          print(error.localizedDescription)
+        }
+    }
+    
+    //MARK: Таргеты
+    
+    @objc
+    func onTabExit() {
+        do {
+            try Auth.auth().signOut()
+        } catch {
+            print(error)
+        }
     }
 }

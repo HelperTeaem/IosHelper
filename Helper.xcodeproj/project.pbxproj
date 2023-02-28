@@ -179,9 +179,10 @@
 		AD46D3FE29AC4227007BED7C /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				AD46D40D29AC9390007BED7C /* BaseControllers */,
-				AD46D40C29AC936C007BED7C /* TabBarControllers */,
 				AD46D40B29AC935C007BED7C /* NavBarControllers */,
+				AD46D40C29AC936C007BED7C /* TabBarControllers */,
+				AD46D40D29AC9390007BED7C /* BaseControllers */,
+				AD46D40E29AC93A9007BED7C /* AllControls */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -207,7 +208,6 @@
 			isa = PBXGroup;
 			children = (
 				ADEFFCDA29AA1C2500B92931 /* BaseController.swift */,
-				AD46D40E29AC93A9007BED7C /* AllControls */,
 			);
 			path = BaseControllers;
 			sourceTree = "<group>";
@@ -215,14 +215,38 @@
 		AD46D40E29AC93A9007BED7C /* AllControls */ = {
 			isa = PBXGroup;
 			children = (
-				AD46D40129AC476B007BED7C /* MainController.swift */,
-				ADF7858329AD0941005E1876 /* Cell */,
+				AD68139829AE4682000864B3 /* Auth */,
+				AD68139929AE471A000864B3 /* Main */,
+				AD68139A29AE4795000864B3 /* ArticleController */,
+			);
+			path = AllControls;
+			sourceTree = "<group>";
+		};
+		AD68139829AE4682000864B3 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
 				AD46D40329AC4789007BED7C /* PersonalController.swift */,
-				AD46D3FF29AC4758007BED7C /* ArticlesController.swift */,
 				AD46D40F29AC948B007BED7C /* EnteredController.swift */,
 				AD46D41729ACCE8A007BED7C /* RegistrationController.swift */,
 			);
-			path = AllControls;
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		AD68139929AE471A000864B3 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				AD46D40129AC476B007BED7C /* MainController.swift */,
+				ADF7858329AD0941005E1876 /* Cell */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		AD68139A29AE4795000864B3 /* ArticleController */ = {
+			isa = PBXGroup;
+			children = (
+				AD46D3FF29AC4758007BED7C /* ArticlesController.swift */,
+			);
+			path = ArticleController;
 			sourceTree = "<group>";
 		};
 		ADEFFCCA29AA1C2500B92931 = {

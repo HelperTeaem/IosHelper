@@ -7,8 +7,14 @@
 
 import UIKit
 import FirebaseAuth
+import FirebaseCore
+import FirebaseFirestore
+import Firebase
+import FirebaseDatabase
 
 final class RegistrationController: BaseController {
+    
+    //MARK: Конфигурируем элементы
     
     private lazy var login: UITextField = {
         let login = UITextField()
@@ -91,6 +97,8 @@ final class RegistrationController: BaseController {
         return register
     }()
     
+    //MARK: Загрузка вьюхи
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -98,6 +106,8 @@ final class RegistrationController: BaseController {
         configureNavigationBar()
         view.backgroundColor = Resources.Colors.mainBackgroundColor
     }
+    
+    //MARK: Функции
     
     private func configureNavigationBar() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(onAddTap))
@@ -146,6 +156,8 @@ final class RegistrationController: BaseController {
         ])
     }
     
+    //MARK: Таргеты
+    
     @objc
     func onAddTap() {
         _ = navigationController?.popViewController(animated: true)
@@ -153,14 +165,12 @@ final class RegistrationController: BaseController {
     
     @objc
     func OnTabRegister() {
-        test[0].entered = true
-        test[0].password = password.text ?? " "
-        test[0].email = email.text ?? " "
-        test[0].login = login.text ?? " "
         Auth.auth().createUser(withEmail: email.text ?? " ", password: password.text ?? " ") { authResult, error in
             if error == nil {
                 let vc = PersonalController()
                 self.navigationController?.pushViewController(vc, animated: true)
+                let ref = Database.database().reference().child("users")
+                ref.child(authResult?.user.uid ?? "").updateChildValues(["login": self.login.text ?? " ", "email" : self.email.text ?? " "])
             }
             else {
                 self.errorLabel.text = "Что-то пошло не так"
