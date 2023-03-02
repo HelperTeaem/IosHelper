@@ -35,6 +35,7 @@ final class TabBarController: UITabBarController {
         let aticlesController = ArticlesController()
         let mainController = MainController()
         let personalController = PersonalController()
+        let enteredController = EnteredController()
         //MARK: Добавить сюда остальную парашу чтобы не было лагов с ебанной навгацией при регистрации
         
         let articlesNavigation =
